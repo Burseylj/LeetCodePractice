@@ -1,0 +1,93 @@
+import kotlin.math.floor
+
+import kotlin.math.sqrt
+
+ 
+
+fun fizzBuzz(num: Int): String {
+
+    val handlers = listOf(
+
+            Handler.FizzHandler(),
+
+            Handler.BuzzHandler(),
+
+            Handler.PerfectSquareHandler()
+
+    )
+
+    return handlers.map { it.handle(num) }.filterNot { it == "" }.joinToString(separator = " ", postfix = "!")
+
+}
+
+ 
+
+sealed class Handler {
+
+ 
+
+    protected abstract fun getWord(): String
+
+    protected abstract fun checkNumber(num: Int): Boolean
+
+    fun handle(num: Int): String {
+
+        return if (checkNumber(num)) getWord() else ""
+
+    }
+
+ 
+
+    abstract class MultipleHandler(private val multipleOf: Int) : Handler() {
+
+        override fun checkNumber(num: Int) = num > 0 && num % multipleOf == 0
+
+    }
+
+ 
+
+    class FizzHandler : MultipleHandler(5) {
+
+        override fun getWord() = "Fizz"
+
+    }
+
+ 
+
+    class BuzzHandler : MultipleHandler(3) {
+
+        override fun getWord() = "Buzz"
+
+    }
+
+ 
+
+    class PerfectSquareHandler : Handler() {
+
+        override fun checkNumber(num: Int): Boolean {
+
+            val root = sqrt(num.toDouble())
+
+ 
+
+            val f = floor(root)
+
+ 
+
+            return root == f
+
+        }
+
+ 
+
+        override fun getWord() = "Square"
+
+    }
+
+}
+
+ 
+
+for (i in 1..25) println("$i: ${fizzBuzz(i)}")
+
+ 
